@@ -1,0 +1,75 @@
+{
+  "name": "eumdoloribus",
+  "description": "Monorepo that includes Compass and all its dependencies",
+  "homepage": "https://github.com/KittyEmmerich/eumdoloribus.git",
+  "author": "AustinGraham",
+  "shortcutFolderName": "MongoDB",
+  "license": "SSPL",
+  "scripts": {
+    "bootstrap": "npm install && lerna run bootstrap --stream",
+    "bootstrap-ci": "npm ci && lerna run bootstrap",
+    "precheck": "npm run depcheck && npm run check-logids && npm run check-leafygreen-dependency-usage",
+    "changed": "node ./scripts/changed.js",
+    "check": "lerna run check --stream",
+    "check-changed": "npm run check -- --since origin/HEAD --exclude-dependents",
+    "precheck-ci": "npm run depcheck && npm run check-logids",
+    "check-ci": "lerna run check",
+    "compile-changed": "lerna run compile --stream --since origin/HEAD",
+    "depalign": "node scripts/depalign.js",
+    "predepcheck": "npm run depalign",
+    "depcheck": "depcheck",
+    "check-logids": "node scripts/check-logids.js",
+    "check-leafygreen-dependency-usage": "node scripts/check-leafygreen-dep-usage.js",
+    "electron-rebuild": "npm run electron-rebuild --workspace mongodb-compass",
+    "node-rebuild": "node ./scripts/rebuild.js kerberos keytar interruptor",
+    "packages-publish": "lerna publish from-package --allow-branch main",
+    "postpackages-publish": "git push && git push --tags",
+    "packages-version": "lerna version --allow-branch main --no-push --no-private -m \"chore(release): Bump package versions\"",
+    "release": "npm run release --workspace mongodb-compass --",
+    "reformat": "lerna run reformat --stream --no-bail",
+    "reformat-changed": "lerna run reformat --stream --no-bail --since origin/HEAD --exclude-dependents",
+    "package-compass": "npm run package-compass --workspace=mongodb-compass --",
+    "prestart": "npm run compile --workspace=@mongodb-js/webpack-config-compass",
+    "start": "npm run start --workspace=mongodb-compass",
+    "test": "lerna run test --concurrency 1 --stream",
+    "test-changed": "lerna run test --stream --concurrency 1 --since origin/HEAD",
+    "test-ci": "lerna run test-ci --concurrency 1",
+    "test-ci-electron": "lerna run test-ci-electron --concurrency 1",
+    "pretest-packages-publish": "./scripts/monorepo/start-proxy-registry.sh && wait-on -t 3000 http://localhost:4873 && npm-cli-adduser -u test -p test -e test@test.test --registry http://localhost:4873 && echo $'\\n\\n!!! LOCAL REGISTRY DOCKER IMAGE IS RUNNING, DO NOT FORGET TO CLEAN IN UP WHEN YOU ARE DONE\\n\\n'",
+    "test-packages-publish": "lerna publish from-package --registry http://localhost:4873",
+    "test-packages-version": "lerna version --no-push --no-private -m \"tmp(release): Test release\"",
+    "update-authors": "node scripts/generate-authors.js",
+    "update-third-party-notices": "node scripts/gather-licenses.js packages/compass/ > THIRD-PARTY-NOTICES.md",
+    "version": "node ./scripts/align-monorepo-dependencies.js --no-commit",
+    "where": "node ./scripts/monorepo/where.js",
+    "create-workspace": "node ./scripts/create-workspace.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KittyEmmerich/eumdoloribus.git"
+  },
+  "//": "See depcheck for why we have some of these dependencies at the root of the monorepo",
+  "devDependencies": {
+    "@babel/core": "7.16.0",
+    "@babel/parser": "7.16.0",
+    "@testing-library/dom": "^8.11.1",
+    "@webpack-cli/serve": "^0.2.0",
+    "lerna": "^4.0.0",
+    "node-gyp": "^8.4.1",
+    "npm-cli-adduser": "^1.1.4",
+    "wait-on": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=14.17.5",
+    "npm": ">=7.16.0"
+  },
+  "bugs": {
+    "url": "https://github.com/KittyEmmerich/eumdoloribus.git/issues"
+  },
+  "workspaces": [
+    "packages/*",
+    "configs/*",
+    "scripts"
+  ],
+  "version": "1.0.0"
+}
